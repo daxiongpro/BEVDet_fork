@@ -6,7 +6,8 @@ from nuscenes import NuScenes
 from nuscenes.utils.data_classes import Box
 from pyquaternion import Quaternion
 
-from tools.data_converter import nuscenes_converter as nuscenes_converter
+# from tools.data_converter import nuscenes_converter as nuscenes_converter
+from data_converter import nuscenes_converter as nuscenes_converter
 
 map_name_from_general_to_detection = {
     'human.pedestrian.adult': 'pedestrian',
@@ -100,12 +101,12 @@ def nuscenes_data_prep(root_path, info_prefix, version, max_sweeps=10):
 
 
 def add_ann_adj_info(extra_tag):
-    nuscenes_version = 'v1.0-trainval'
-    dataroot = './data/nuscenes/'
+    nuscenes_version = 'v1.0-mini'
+    dataroot = 'data/nuscenes/'
     nuscenes = NuScenes(nuscenes_version, dataroot)
     for set in ['train', 'val']:
         dataset = pickle.load(
-            open('./data/nuscenes/%s_infos_%s.pkl' % (extra_tag, set), 'rb'))
+            open('data/nuscenes/%s_infos_%s.pkl' % (extra_tag, set), 'rb'))
         for id in range(len(dataset['infos'])):
             if id % 10 == 0:
                 print('%d/%d' % (id, len(dataset['infos'])))
@@ -123,7 +124,7 @@ def add_ann_adj_info(extra_tag):
             dataset['infos'][id]['ann_infos'] = ann_infos
             dataset['infos'][id]['ann_infos'] = get_gt(dataset['infos'][id])
             dataset['infos'][id]['scene_token'] = sample['scene_token']
-        with open('./data/nuscenes/%s_infos_%s.pkl' % (extra_tag, set),
+        with open('data/nuscenes/%s_infos_%s.pkl' % (extra_tag, set),
                   'wb') as fid:
             pickle.dump(dataset, fid)
 
@@ -131,8 +132,8 @@ def add_ann_adj_info(extra_tag):
 if __name__ == '__main__':
     dataset = 'nuscenes'
     version = 'v1.0'
-    train_version = f'{version}-trainval'
-    root_path = './data/nuscenes'
+    train_version = f'{version}-mini'
+    root_path = 'data/nuscenes'
     extra_tag = 'bevdetv2-nuscenes'
     nuscenes_data_prep(
         root_path=root_path,
