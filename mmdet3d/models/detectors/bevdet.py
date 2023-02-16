@@ -221,7 +221,7 @@ class BEVDetTRT(BEVDet):
         x = x.permute(0, 3, 1, 2).contiguous()
         bev_feat = self.bev_encoder(x)
         outs = self.pts_bbox_head([bev_feat])
-        outs = self.result_serialize(outs)
+        outs = self.result_serialize(outs)  # onnx 输出必须是一个 tensor。这里把 dict 转成[tensor1, tensor2, ...] 的形式
         return outs
 
     def get_bev_pool_input(self, input):
